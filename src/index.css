@@ -23,3 +23,27 @@ body {
 .location-marker:hover {
   background: #dc2626;
 }
+
+.info-box {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 320px;
+  background: rgba(0, 0, 0, 0.72);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  z-index: 10;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+.info-box h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #fbbf24;
+}
+
+.info-box p {
+  margin: 8px 0;
+  line-height: 1.4;
+}

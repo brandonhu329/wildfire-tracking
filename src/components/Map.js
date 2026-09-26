@@ -1,8 +1,9 @@
+import { useState } from 'react'
 import GoogleMapReact from 'google-map-react'
 import LocationMarker from './LocationMarker'
 
-const MAX_MARKERS = 20000
-const MAX_PER_REGION = 3500
+const MAX_MARKERS = 1200
+const MAX_PER_REGION = 200
 
 const Map = ({
   eventData = [],
@@ -12,6 +13,8 @@ const Map = ({
   },
   zoom = 2
 }) => {
+  const [selectedEvent, setSelectedEvent] = useState(null)
+
   const wildfireMarkers = Array.isArray(eventData)
     ? (() => {
         const regions = {
@@ -93,11 +96,26 @@ const Map = ({
               key={event.id || `${lat}-${lng}-${index}`}
               lat={lat}
               lng={lng}
-              onClick={() => console.log(event.title)}
+              onClick={() => setSelectedEvent(event)}
             />
           )
         })}
       </GoogleMapReact>
+
+      {selectedEvent && (
+        <div className="info-box">
+          <h3>Event Location Info</h3>
+          <p>
+            <strong>ID:</strong> {selectedEvent.id}
+          </p>
+          <p>
+            <strong>Title:</strong> {selectedEvent.title}
+          </p>
+          {selectedEvent.description && (
+            <p>{selectedEvent.description}</p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
