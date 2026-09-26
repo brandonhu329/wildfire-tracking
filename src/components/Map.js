@@ -1,8 +1,8 @@
 import GoogleMapReact from 'google-map-react'
 import LocationMarker from './LocationMarker'
 
-const MAX_MARKERS = 600
-const MAX_PER_REGION = 80
+const MAX_MARKERS = 20000
+const MAX_PER_REGION = 3500
 
 const Map = ({
   eventData = [],
