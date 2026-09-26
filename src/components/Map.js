@@ -9,6 +9,21 @@ const Map = ({
   },
   zoom = 6
 }) => {
+  const wildfireMarkers = Array.isArray(eventData)
+    ? eventData.filter((event) => {
+        const categories = event?.categories || []
+        const geometries = event?.geometries || []
+        const latestGeometry = geometries[0]
+        const coordinates = latestGeometry?.coordinates
+
+        return (
+          categories.some((category) => category.id === 8) &&
+          Array.isArray(coordinates) &&
+          coordinates.length >= 2
+        )
+      })
+    : []
+
   return (
     <div className="map">
       <GoogleMapReact
@@ -18,18 +33,12 @@ const Map = ({
         defaultCenter={center}
         defaultZoom={zoom}
       >
-        {eventData.map((event, index) => {
-          const geometry = event.geometry && event.geometry[0]
-
-          if (!geometry || !geometry.coordinates || geometry.coordinates.length < 2) {
-            return null
-          }
-
-          const [lng, lat] = geometry.coordinates
+        {wildfireMarkers.map((event, index) => {
+          const [lng, lat] = event.geometries[0].coordinates
 
           return (
             <LocationMarker
-              key={`${event.id || 'event'}-${index}`}
+              key={event.id || `${lat}-${lng}-${index}`}
               lat={lat}
               lng={lng}
               onClick={() => console.log(event.title)}
