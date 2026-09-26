@@ -2,6 +2,7 @@ import GoogleMapReact from 'google-map-react'
 import LocationMarker from './LocationMarker'
 
 const Map = ({
+  eventData = [],
   center = {
     lat: 42.3265,
     lng: -122.8756
@@ -17,10 +18,24 @@ const Map = ({
         defaultCenter={center}
         defaultZoom={zoom}
       >
-        <LocationMarker
-          lat={center.lat}
-          lng={center.lng}
-        />
+        {eventData.map((event, index) => {
+          const geometry = event.geometry && event.geometry[0]
+
+          if (!geometry || !geometry.coordinates || geometry.coordinates.length < 2) {
+            return null
+          }
+
+          const [lng, lat] = geometry.coordinates
+
+          return (
+            <LocationMarker
+              key={`${event.id || 'event'}-${index}`}
+              lat={lat}
+              lng={lng}
+              onClick={() => console.log(event.title)}
+            />
+          )
+        })}
       </GoogleMapReact>
     </div>
   )

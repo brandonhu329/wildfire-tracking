@@ -3,28 +3,30 @@ import Map from './components/Map'
 
 function App() {
   const [eventData, setEventData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const res = await fetch(
-        'https://eonet.gsfc.nasa.gov/api/v2.1/events'
-      )
+      try {
+        const res = await fetch(
+          'https://eonet.gsfc.nasa.gov/api/v2.1/events'
+        )
 
-      const data = await res.json()
-
-      console.log('NASA response:', data)
-
-      setEventData(data.events)
+        const data = await res.json()
+        setEventData(data.events || [])
+      } catch (error) {
+        console.error('Error fetching wildfire data:', error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchEvents()
   }, [])
 
-  console.log('eventData:', eventData)
-
   return (
     <div>
-      <Map />
+      {loading ? <h1>Loading...</h1> : <Map eventData={eventData} />}
     </div>
   )
 }
