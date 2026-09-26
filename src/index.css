@@ -1,15 +1,25 @@
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.map{
+.map {
   width: 100vw;
   height: 100vh;
   position: relative;
 }
 
-.location-icon {
-  font-size: 2rem;
-  color: red;
+.location-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid white;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.location-marker:hover {
+  background: #dc2626;
 }
