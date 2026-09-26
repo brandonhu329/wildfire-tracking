@@ -2,31 +2,21 @@ import { useState } from 'react'
 import GoogleMapReact from 'google-map-react'
 import LocationMarker from './LocationMarker'
 
-const MAX_MARKERS = 1200
-const MAX_PER_REGION = 200
+const MAX_MARKERS = 2000
 
 const Map = ({
   eventData = [],
   center = {
-    lat: 20,
-    lng: 0
+    lat: 39.5,
+    lng: -98.35
   },
-  zoom = 2
+  zoom = 4
 }) => {
   const [selectedEvent, setSelectedEvent] = useState(null)
 
   const wildfireMarkers = Array.isArray(eventData)
-    ? (() => {
-        const regions = {
-          northAmerica: [],
-          southAmerica: [],
-          europe: [],
-          africa: [],
-          asia: [],
-          oceania: []
-        }
-
-        eventData.forEach((event) => {
+    ? eventData
+        .filter((event) => {
           const categories = event?.categories || []
           const geometries = event?.geometries || []
           const latestGeometry = geometries[0]
@@ -37,40 +27,19 @@ const Map = ({
             !Array.isArray(coordinates) ||
             coordinates.length < 2
           ) {
-            return
+            return false
           }
 
           const [lng, lat] = coordinates
 
-          if (lat >= 25 && lng <= -30) {
-            regions.northAmerica.push(event)
-          } else if (lat <= 20 && lng <= -20) {
-            regions.southAmerica.push(event)
-          } else if (lat >= 35 && lng >= -15 && lng <= 45) {
-            regions.europe.push(event)
-          } else if (lat <= 35 && lat >= -35 && lng >= -20 && lng <= 55) {
-            regions.africa.push(event)
-          } else if (lat >= -10 && lng >= 40) {
-            regions.asia.push(event)
-          } else {
-            regions.oceania.push(event)
-          }
+          return lat >= 24 && lat <= 50 && lng >= -125 && lng <= -66
         })
-
-        const distributed = Object.values(regions)
-          .map((regionEvents) =>
-            regionEvents
-              .sort((a, b) => {
-                const aDate = new Date(a?.geometries?.[0]?.date || 0).getTime()
-                const bDate = new Date(b?.geometries?.[0]?.date || 0).getTime()
-                return bDate - aDate
-              })
-              .slice(0, MAX_PER_REGION)
-          )
-          .flat()
-
-        return distributed.slice(0, MAX_MARKERS)
-      })()
+        .sort((a, b) => {
+          const aDate = new Date(a?.geometries?.[0]?.date || 0).getTime()
+          const bDate = new Date(b?.geometries?.[0]?.date || 0).getTime()
+          return bDate - aDate
+        })
+        .slice(0, MAX_MARKERS)
     : []
 
   return (
