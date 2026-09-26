@@ -1,7 +1,7 @@
 import GoogleMapReact from 'google-map-react'
 import LocationMarker from './LocationMarker'
 
-const MAX_MARKERS = 200
+const MAX_MARKERS = 600
 const MAX_PER_REGION = 80
 
 const Map = ({
@@ -80,7 +80,13 @@ const Map = ({
         defaultZoom={zoom}
       >
         {wildfireMarkers.map((event, index) => {
-          const [lng, lat] = event.geometries[0].coordinates
+          const coordinates = event?.geometries?.[0]?.coordinates
+
+          if (!Array.isArray(coordinates) || coordinates.length < 2) {
+            return null
+          }
+
+          const [lng, lat] = coordinates
 
           return (
             <LocationMarker
